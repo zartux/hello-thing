@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello Thing</title>
+    <style>
+      span {
+        font-size: 50%;
+      }
+      body.hide-h2 h2 {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>This is always showing</h1>
+    <h2>This is sometimes showing <span>(If you click this, then it won't show for 30 seconds.)</span></h2>
+    <script>
+      var now = new Date().toUTCString();
+      var getEl = (tag)=> document.getElementsByTagName(tag)[0];
+      var hideForAWhile = function(){
+        console.log('h1h');
+        document.cookie="hide=1; expires="+now;
+      }
+      var bind = (el) => (fn) => el.onclick = fn;
+      var body = getEl('body');
+      var h2 = getEl('h2');
+      var span = getEl('span');
+      bind(getEl('h2'))(hideForAWhile);
+      // do this part on the server:
+      if(document.cookie.match('hide=1')){
+        body.class="hide-h2"  
+      }
+    </script>
+  </body>
+</html>
