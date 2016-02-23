@@ -3,9 +3,6 @@
   <head>
     <title>Hello Thing</title>
     <style>
-      span {
-        font-size: 50%;
-      }
       body.hidden-hello h2 {
         display: none;
       }
@@ -13,25 +10,21 @@
   </head>
   <body>
     <h1>This is always showing</h1>
-    <h2>This is sometimes showing <span>(Hide)</span></h2>
-    <h3>Reset!</h3>
+    <h2>This is sometimes showing <button id="hide">Hide</button></h2>
+    <h3 id="reset">Reset!</h3>
     <script>
-      var getEl = (tag)=> document.getElementsByTagName(tag)[0];
       var bind = (el) => (fn) => el.onclick = fn;
-      var hide = ()=> body.classList.add('hidden-hello')
+      var hide = () => document.body.classList.add('hidden-hello');
       var setHidden = function(shouldHide){
         return function(){
-          shouldHide && hide();
           localStorage.setItem('hidden-hello', shouldHide);
+          shouldHide && hide();
         }
       }
-      var body = getEl('body');
-      var h2 = getEl('h2');
-      var h3 = getEl('h3');
-      var span = getEl('span');
-      bind(getEl('h2'))(setHidden(1));
-      bind(getEl('h3'))(setHidden(0));
-      Number(localStorage.getItem('hidden-hello')) && hide();
+      bind(document.getElementById('hide'))(setHidden(1));
+      bind(document.getElementById('reset'))(setHidden(0));
+      // do this on the server, and use a cookie instead of localstorage:
+      if(Number(localStorage.getItem('hidden-hello'))){ hide() };
     </script>
   </body>
 </html>
