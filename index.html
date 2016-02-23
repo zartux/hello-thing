@@ -6,30 +6,32 @@
       span {
         font-size: 50%;
       }
-      body.hide-h2 h2 {
+      body.hidden-hello h2 {
         display: none;
       }
     </style>
   </head>
   <body>
     <h1>This is always showing</h1>
-    <h2>This is sometimes showing <span>(If you click this, then it won't show for 30 seconds.)</span></h2>
+    <h2>This is sometimes showing <span>(Hide)</span></h2>
+    <h3>Reset!</h3>
     <script>
-      var now = new Date().toUTCString();
       var getEl = (tag)=> document.getElementsByTagName(tag)[0];
-      var hideForAWhile = function(){
-        console.log('h1h');
-        document.cookie="hide=1; expires="+now;
-      }
       var bind = (el) => (fn) => el.onclick = fn;
+      var hide = ()=> body.classList.add('hidden-hello')
+      var setHidden = function(shouldHide){
+        return function(){
+          shouldHide && hide();
+          localStorage.setItem('hidden-hello', shouldHide);
+        }
+      }
       var body = getEl('body');
       var h2 = getEl('h2');
+      var h3 = getEl('h3');
       var span = getEl('span');
-      bind(getEl('h2'))(hideForAWhile);
-      // do this part on the server:
-      if(document.cookie.match('hide=1')){
-        body.class="hide-h2"  
-      }
+      bind(getEl('h2'))(setHidden(1));
+      bind(getEl('h3'))(setHidden(0));
+      Number(localStorage.getItem('hidden-hello')) && hide();
     </script>
   </body>
 </html>
